@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Upload } from "antd";
 import { Workspaces } from "../Utils/workspaces";
 import { Folders } from "../Utils/folders";
-
+import { Route, Routes, useNavigate, Outlet } from "react-router-dom";
+import Folder from "./Folder.jsx";
 const MyLibrary = ({ setWp }) => {
   const [active, setActive] = useState("Videos");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [renaming, setRenaming] = useState(false);
+  const [renamingFolderId, setRenamingFolderId] = useState(null);
   const [folders, setFolders] = useState(() => {
     // Try to get workspaces from localStorage first
     const savedFolders = localStorage.getItem("folders");
@@ -17,10 +19,10 @@ const MyLibrary = ({ setWp }) => {
   const [folderName, setFolderName] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     localStorage.setItem("folders", JSON.stringify(folders));
-  }, [folders]);
+  }, [folders, setFolders]);
 
   const showModal = (folderId = null) => {
     setSelectedFolderId(folderId);
@@ -78,10 +80,26 @@ const MyLibrary = ({ setWp }) => {
       setIsMenuVisible(true);
     }
   };
-  const handleRename = (e,id) => {
-    e.preventDefault();
-    const folder = folders.find((f) => f.id === id);
+  const handleNameChange = (e, id) => {
+    const updatedFolders = folders.map((folder) =>
+      folder.id === id ? { ...folder, title: e.target.value } : folder
+    );
+    setFolders(updatedFolders);
+  };
 
+  const handleRenaming = (id) => {
+    setIsMenuVisible(false);
+    if (renamingFolderId === id) {
+      setRenamingFolderId(null);
+    } else {
+      setRenamingFolderId(id);
+      // setRenaming(true)
+    }
+  };
+
+  const handleFolderDelete = (id) => {
+    const updatedFolders = folders.filter((folder) => folder.id !== id);
+    setFolders(updatedFolders);
   };
   return (
     <div className="h-full w-full px-6">
@@ -216,22 +234,23 @@ const MyLibrary = ({ setWp }) => {
             </svg>
           </div>
         </div>
-        <div className="overflow-x-auto flex items-start h-[15%]  gap-10 py-6 sidebar">
+        <div className="overflow-x-auto flex items-start h-[20%]  gap-10 py-6 sidebar">
           {folders.map((folder) => (
             <div className="relative">
               <div
                 key={folder.id}
                 style={{ transition: "all .3s" }}
                 className="min-w-[200px] cursor-pointer py-2 px-3 relative flex items-center justify-between rounded-lg border text-[rgb(175,175,175)] border-[rgb(75,75,75)] bg-none hover:bg-[rgb(51,51,51)] hover:text-white"
-                // onClick={() => showModal(folder.id)}
+                onClick={() => navigate(`mylibrary/folders/${folder.id}`)}
                 onContextMenu={(e) => handleMenu(e, folder.id)}
               >
                 <div className="flex flex-col">
-                  {renaming && selectedFolderId ? (
+                  {renamingFolderId === folder.id ? (
                     <input
                       type="text"
                       placeholder="enter folder name"
-                      onChange={(e)=>handleRename(e,folder.id)}
+                      onBlur={() => setRenamingFolderId(null)}
+                      onChange={(e) => handleNameChange(e, folder.id)}
                       className="w-[50%] p-0 text-sm placeholder:text-sm bg-transparent text-white border rounded-md "
                     />
                   ) : (
@@ -264,7 +283,7 @@ const MyLibrary = ({ setWp }) => {
                 } bg-black p-2 min-w-[100px] flex flex-col items-start absolute bottom-[-4rem] right-[-3rem] z-10`}
               >
                 <button
-                  onClick={() => setRenaming(true)}
+                  onClick={() => handleRenaming(folder.id)}
                   className="text-white py-2 text-start text-xs font-semibold flex items-start gap-2 hover:bg-[rgb(37,34,36)]  border-b border-[rgb(55,55,55)] w-full"
                 >
                   <svg
@@ -286,7 +305,10 @@ const MyLibrary = ({ setWp }) => {
                   </svg>
                   Rename
                 </button>
-                <button className="text-white py-2 text-start text-xs font-semibold flex items-start gap-2 hover:bg-[rgb(37,34,36)]  w-full">
+                <button
+                  onClick={() => handleFolderDelete(folder.id)}
+                  className="text-white py-2 text-start text-xs font-semibold flex items-start gap-2 hover:bg-[rgb(37,34,36)]  w-full"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1rem"
@@ -304,6 +326,7 @@ const MyLibrary = ({ setWp }) => {
             </div>
           ))}
         </div>
+        <Outlet/>
       </div>
     </div>
   );

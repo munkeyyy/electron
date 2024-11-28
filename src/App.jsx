@@ -9,16 +9,17 @@ import Billing from "./Components/Billing.jsx";
 import Settings from "./Components/Settings.jsx";
 import SearchBar from "./Components/Common/SearchBar.jsx";
 import { useNavigate } from "react-router-dom";
+import Folder from "./Components/Folder.jsx";
 
 export default function App() {
   const [isExpanding, setIsExpanding] = useState(true);
-  const [wp,setWp]=useState(null)
+  const [wp, setWp] = useState(null);
   return (
     <div className="bg-black h-screen max-h-full">
       {/* <NavBar/> */}
       <div className="flex items-start justify-start w-full h-full overflow-x-hidden relative">
         <div className="flex  items-center">
-          <Sidebar isExpanding={isExpanding} wp={wp} setWp={setWp}/>
+          <Sidebar isExpanding={isExpanding} wp={wp} setWp={setWp} />
           <button
             style={{ transition: "all .5s" }}
             onClick={() => setIsExpanding(!isExpanding)}
@@ -45,17 +46,19 @@ export default function App() {
         </div>
         <div
           style={{ transition: "all .5s" }}
-          className={`w-full bg-[#4444] h-full ${isExpanding ? "ml-64" : "ml-0"}`}
+          className={`w-full bg-[#4444] h-full ${
+            isExpanding ? "ml-64" : "ml-0"
+          }`}
         >
           <div className="flex items-center justify-between">
             <SearchBar />
-         
           </div>
           <div className="px-4 py-3">
             <Routes>
               <Route path="*" element={<Navigate to={"/"} replace />} />
               <Route path="/" element={<Dashboard />} />
-              <Route path="/mylibrary" element={<MyLibrary setWp={setWp}/>} />
+              <Route path="/mylibrary" element={<MyLibrary setWp={setWp} />} />
+              <Route path={`/mylibrary/folders/:id`} element={<Folder />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
