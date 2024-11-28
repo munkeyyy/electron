@@ -1,4 +1,4 @@
-export const Workspaces = [
+export let Workspaces = [
     {
       id: 1,
       name: "Workspace 1",

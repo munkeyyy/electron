@@ -1,13 +1,68 @@
-import { Button } from "antd";
-import React, { useState } from "react";
+import { Button, Modal } from "antd";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Workspaces } from "../../Utils/workspaces";
-const Sidebar = () => {
+
+// import { Workspaces } from "../../Utils/workspaces";
+const Sidebar = ({ isExpanding, wp, setWp }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState("home");
-  const [activeWorkSpaces, setActiveWorkspaces]=useState(0)
+  const [activeWorkSpace, setActiveWorkspace] = useState(0);
+  const [workspaces,setWorkspaces]=useState(null)
+  const [spaces, setSpaces] = useState(() => {
+    // Try to get workspaces from localStorage first
+    const savedWorkspaces = localStorage.getItem("workspaces");
+    return savedWorkspaces ? JSON.parse(savedWorkspaces) : [...Workspaces];
+  });
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Update localStorage whenever spaces change
+  useEffect(() => {
+    localStorage.setItem("workspaces", JSON.stringify(spaces));
+   
+  }, [spaces]);
+  useEffect(()=>{
+    const wp=JSON.parse(localStorage.getItem("workspaces"))
+    setWorkspaces(wp)
+  },[spaces,setSpaces])
+  
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const addWorkspace = () => {
+    if (!workspaceName.trim()) return;
+
+    // Find the next id dynamically
+    const nextId =
+      spaces.length > 0 ? Math.max(...spaces.map((ws) => ws.id)) + 1 : 1;
+
+    // Create new workspace object
+    const newWorkspace = { id: nextId, name: workspaceName };
+
+    // Update the spaces state (which will trigger localStorage update via useEffect)
+    const updatedSpaces = [...spaces, newWorkspace];
+    setSpaces(updatedSpaces);
+    setWp(updatedSpaces);
+    // Reset the input and close modal
+    setWorkspaceName("");
+    setIsModalOpen(false);
+  };
+  // const [workspaces, setWorkspaces] = useState(null);
+  // useEffect(() => {
+  //   setWorkspaces(JSON.parse(localStorage.getItem("workspaces")));
+  // }, [wp, setWp]);
   return (
-    <div className=" bg-[#1111] flex-none relative h-full font-medium sidebar  w-[250px] overflow-y-auto flex flex-col gap-4 items-center justify-start overflow-hidden shadow-md shadow-white">
+    <div
+      className={` bg-[#1111]  flex-none fixed ${
+        isExpanding ? "left-0" : "left-[-252px]"
+      } top-0 h-full font-medium sidebar  w-[250px] overflow-y-auto flex flex-col gap-4 items-center justify-start overflow-hidden `}
+    >
       <div className="bg-[#1111] border-b border-gray-300 p-4 gap-2 justify-center items-center w-full mb-4">
         <div className="logo flex items-center justify-center gap-3">
           <div>
@@ -42,9 +97,9 @@ const Sidebar = () => {
               }}
               className={`w-full  text-start justify-start px-2  border-none ${
                 active === "home"
-                  ? "bg-[rgb(44,42,44)] font-medium text-white"
-                  : "font-normal text-[rgb(175,175,175)]"
-              }  text-base bg-transparent transition-all  hover:bg-[rgb(44, text-[rgb(175,175,175)]42,44)] py-6 `}
+                  ? "bg-[rgb(37,34,36)] font-medium text-white"
+                  : "font-normal bg-transparent text-[rgb(175,175,175)]"
+              }  text-base  transition-all  hover:bg-[rgb(44, text-[rgb(175,175,175)]42,44)] py-6 `}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,9 +127,9 @@ const Sidebar = () => {
               }}
               className={`w-full text-start justify-start px-2  border-none ${
                 active === "library"
-                  ? "bg-[rgb(44,42,44)] font-medium text-white"
-                  : "font-normal text-[rgb(175,175,175)]"
-              }  text-base bg-transparent transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
+                  ? "bg-[rgb(37,34,36)] font-medium text-white"
+                  : "font-normal bg-transparent text-[rgb(175,175,175)]"
+              }  text-base  transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,9 +155,9 @@ const Sidebar = () => {
               }}
               className={`w-full text-start justify-start px-2  border-none ${
                 active === "notifications"
-                  ? "bg-[rgb(44,42,44)] font-medium text-white"
-                  : "font-normal text-[rgb(175,175,175)]"
-              }  text-base bg-transparent transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
+                  ? "bg-[rgb(37,34,36)] font-medium text-white"
+                  : "font-normal bg-transparent text-[rgb(175,175,175)]"
+              }  text-base  transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -124,9 +179,9 @@ const Sidebar = () => {
               }}
               className={`w-full text-start justify-start px-2  border-none ${
                 active === "billing"
-                  ? "bg-[rgb(44,42,44)] font-medium text-white"
-                  : "font-normal text-[rgb(175,175,175)]"
-              }  text-base bg-transparent transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
+                  ? "bg-[rgb(37,34,36)] font-medium text-white"
+                  : "font-normal bg-transparent text-[rgb(175,175,175)]"
+              }  text-base  transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -148,9 +203,9 @@ const Sidebar = () => {
               }}
               className={`w-full text-start justify-start px-2  border-none ${
                 active === "settings"
-                  ? "bg-[rgb(44,42,44)] font-medium text-white"
-                  : "font-normal text-[rgb(175,175,175)]"
-              }  text-base bg-transparent transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
+                  ? "bg-[rgb(37,34,36)] font-medium text-white"
+                  : "font-normal bg-transparent text-[rgb(175,175,175)]"
+              }  text-base  transition-all  hover:bg-[rgb(44,42,44)] py-6 `}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -179,24 +234,96 @@ const Sidebar = () => {
       </div>
       <div className="self-start w-full">
         <div className="pb-4 border-b border-[rgb(32,32,32)]">
-          <p className="text-[rgb(175,175,175)] mb-4 px-2 font-semibold">
-            Workspaces
-          </p>
-          <div className="h-[150px] overflow-auto flex flex-col">
-            {Workspaces.length > 0 &&
-              Workspaces.map((workspace, index) => {
+          <div className="flex items-center mb-4 justify-between">
+            <p className="text-[rgb(175,175,175)]  px-2 font-semibold">
+              Workspaces
+            </p>
+            <button
+              onClick={showModal}
+              className="text-[rgb(175,175,175)]  rounded-full  cursor-pointer  text-xs hover:text-white flex items-center gap-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2rem"
+                height="1.2rem"
+                viewBox="0 0 24 24"
+              >
+                <g fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    fill="currentColor"
+                    fill-opacity="0.25"
+                  />
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="square"
+                    stroke-linejoin="round"
+                    stroke-width="1.2"
+                    d="M12 8v8m4-4H8"
+                  />
+                </g>
+              </svg>
+              Add Workspace
+            </button>
+            <Modal
+              className="bg-black"
+              title="Create Workspace"
+              open={isModalOpen}
+              onOk={addWorkspace}
+              onCancel={handleCancel}
+            >
+              <div className="my-4 w-full flex items-center flex-col">
+                <input
+                  type="text"
+                  className="w-full p-3 bg-transparent border border-[rgb(44,44,44)] rounded-lg"
+                  placeholder="Workspace Name"
+                  value={workspaceName}
+                  onChange={(e) => setWorkspaceName(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={addWorkspace}
+                className="my-2  bg-[rgb(51,51,51)] text-white py-2 px-4 rounded-lg"
+              >
+                Add Workspace
+              </button>
+            </Modal>
+          </div>
+          <div className="h-[150px] overflow-auto flex flex-col sidebar">
+            {workspaces ? (
+              workspaces.length > 0 &&
+              workspaces.slice(10).map((workspace, index) => {
                 return (
                   <div
                     key={workspace.id}
-                    className="flex items-center rounded-md hover:bg-[rgb(46,46,46)] gap-2 py-2 px-2"
+                    onClick={() => {
+                      setActiveWorkspace(workspace.id);
+                      console.log(workspace.id);
+                    }}
+                    className={`flex items-center ${
+                      activeWorkSpace === workspace.id
+                        ? "bg-[rgb(37,34,36)]"
+                        : ""
+                    } rounded-md cursor-pointer hover:bg-[rgb(37,34,36)] gap-2 py-2 px-2 mb-2`}
                   >
-                    <div className="px-3 py-2 font-bold text-[#1e1e1e] bg-[rgba(75,75,75)] rounded-md">
-                        {workspace.name.charAt(0)}
+                    <div className="px-3 py-2 h-10 w-10 flex items-center justify-center font-bold text-[#1e1e1e] bg-[rgba(75,75,75)] rounded-md">
+                      {workspace.name.charAt(0).toLocaleUpperCase()}
                     </div>
-                    <span className="text-white font-semibold">{workspace.name.slice(0,10) + workspace.id}</span>
+                    <span className="text-white font-semibold">
+                      {workspace.name}
+                    </span>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div className="flex items-center justify-center w-full h-full">
+                <p className="text-[rgb(175,175,175)] opacity-[0.7]">
+                  No Workspaces Available
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

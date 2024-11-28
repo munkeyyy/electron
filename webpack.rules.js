@@ -33,6 +33,19 @@ module.exports = [
     include:[path.resolve(__dirname, "app/src")],
     use:['style-loader', 'css-loader', 'postcss-loader'],
   },
+  {
+    test: /\.js$/,
+    include: [
+      path.resolve(__dirname, 'node_modules', 'electron', 'dist'), // Include the electron/dist directory
+      path.resolve(__dirname, 'node_modules', 'electron', 'renderers'), // Include the electron/renderers directory
+    ],
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env'],
+      },
+    },
+  },
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:
   /**

@@ -44,9 +44,12 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
     "antd": "^5.22.2",
+    "browserify-fs": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron-squirrel-startup": "^1.0.1",
+    "formik": "^2.4.6",
+    "path-browserify": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.1",
