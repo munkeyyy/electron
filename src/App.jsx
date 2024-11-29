@@ -14,6 +14,7 @@ import Folder from "./Components/Folder.jsx";
 export default function App() {
   const [isExpanding, setIsExpanding] = useState(true);
   const [wp, setWp] = useState(null);
+  const [currentFolder,setCurrentFolder]=useState(null)
   return (
     <div className="bg-black h-screen max-h-full">
       {/* <NavBar/> */}
@@ -57,8 +58,9 @@ export default function App() {
             <Routes>
               <Route path="*" element={<Navigate to={"/"} replace />} />
               <Route path="/" element={<Dashboard />} />
-              <Route path="/mylibrary" element={<MyLibrary setWp={setWp} />} />
-              <Route path={`/mylibrary/folders/:id`} element={<Folder />} />
+              <Route path="/mylibrary" element={<MyLibrary setWp={setWp}  setCurrentFolder={setCurrentFolder} />}>
+                <Route path={`folders/:id`} element={<Folder currentFolder={currentFolder} />} />
+              </Route>
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
