@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Upload } from "antd";
+import { Button, message, Modal, Upload } from "antd";
 import { Workspaces } from "../Utils/workspaces";
 import { Folders } from "../Utils/folders";
 import { Route, Routes, useNavigate, Outlet, Link } from "react-router-dom";
@@ -111,6 +111,7 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
   const handleFolderDelete = (id) => {
     const updatedFolders = folders.filter((folder) => folder.id !== id);
     setFolders(updatedFolders);
+    message.success("Folder deleted successfully");
   };
   return (
     <div className=" w-full px-6">

@@ -92,6 +92,10 @@ color: white !important;
 .ant-upload-list{
   position: absolute;
 }
+.ant-message .ant-message-notice-wrapper .ant-message-notice-content{
+  background-color: rgb(18,18,18);
+color: white;
+}
 .sidebar {
   transition: all 0.5s;
 }
