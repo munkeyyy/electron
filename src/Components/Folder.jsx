@@ -158,10 +158,10 @@ const Folder = ({ currentFolder }) => {
           </button>
         </Modal>
       </div>
-      <div className="flex justify-start  items-center gap-10 flex-wrap">
+      <div className="grid grid-cols-6 grid-flow-dense">
         {folder?.contents?.length > 0 ? (
           folder.contents.map((content, index) => (
-            <div className="my-6 flex flex-col items-start gap-4" key={index}>
+            <div className="my-6 flex flex-col items-center gap-4" key={index}>
               <div className="h-20 w-20 overflow-hidden self-center">
                 {renderContent(content)}
               </div>

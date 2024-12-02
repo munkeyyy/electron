@@ -2,7 +2,7 @@ import { Input } from "antd";
 import React from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, message, Upload } from "antd";
-
+// import { useReactMediaRecorder } from "react-media-recorder";
 // import { desktopCapturer } from "electron";
 const props = {
   name: "file",
@@ -23,9 +23,12 @@ const props = {
 };
 
 const SearchBar = () => {
+  // const { status, startRecording, stopRecording, mediaBlobUrl } =
+  // useReactMediaRecorder({ video: true });
     const handleRecord =  () => {
-        console.log("recording")
+        // startRecording()
       }
+
   return (
     <div className=" py-4 px-24 mx-auto flex items-start justify-between gap-4 w-full">
       <div className="w-full flex items-center gap-1 justify-start border border-[rgb(77,76,76)] rounded-full">
@@ -85,6 +88,8 @@ const SearchBar = () => {
             Click to Upload
           </Button>
         </Upload>
+        <div>
+
         <button onClick={handleRecord} className="text-black bg-white px-4 py-1.5 font-normal rounded-lg flex items-center gap-2 mt-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -103,6 +108,9 @@ const SearchBar = () => {
           </svg>
           Record
         </button>
+        {/* <video src={mediaBlobUrl} controls autoPlay loop></video>
+        <p>{status}</p> */}
+        </div>
       </div>
     </div>
   );
