@@ -41,10 +41,20 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
     const file = event.target.files[0];
 
     if (file) {
-      setUploadedFile(file);
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        setUploadedFile([{
+          file,
+          url: reader.result,  // This will be a base64 string
+          name: file.name,
+          type: file.type
+        }]);
+      };
+      reader.readAsDataURL(file);
     }
   };
-
+  console.log("uploaded, url ", uploadedFile)
   const addFolder = () => {
     if (!folderName.trim()) return;
 
@@ -56,7 +66,7 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
     const newFolder = {
       id: nextId,
       title: folderName,
-      contents: uploadedFile ? [uploadedFile.name] : [],
+      contents: uploadedFile ,
       createdAt: Date.now(),
     };
 
@@ -171,7 +181,7 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
                 className="opacity-0 w-full cursor-pointer  after:content-['click to upload'] after:text-white after:absolute after:top-1/2 left-1/2 after:translate-x-[-50%] after:translate-y-[-50%]"
                 type="file"
                 // accept="mp4,mov"
-                onChange={handleFileUpload}
+                onChange={(e)=>handleFileUpload(e)}
               />
               <div className=" absolute top-1/2 left-1/2 translate-x-[-50%] flex items-center gap-2 translate-y-[-50%]">
                 <svg
@@ -261,7 +271,7 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
           </div>
         ) : (
           <div className="overflow-x-auto flex items-start h-[20%]  gap-10 py-6 sidebar">
-            {folders.map((folder, index) => (
+            {folders.length>0?folders.map((folder, index) => (
               <Link key={index} to={`/mylibrary/folders/${folder.id}`}>
                 <div className="relative">
                   <div
@@ -290,7 +300,7 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
                         </span>
                       )}
                       <span className="font-normal text-sm">
-                        {folder.contents ? folder.contents.length : 0} Videos
+                        {folder.contents ? folder.contents.length : 0} {folder.contents.length === 1 ? "File" : "Files"}
                       </span>
                     </div>
 
@@ -356,7 +366,9 @@ const MyLibrary = ({ setWp, setCurrentFolder }) => {
                   </div>
                 </div>
               </Link>
-            ))}
+            )):<div className="flex items-center justify-center h-full w-full">
+              <p className="text-[rgb(175,175,175)]">No folders found</p>
+              </div>}
           </div>
         )}
       </div>

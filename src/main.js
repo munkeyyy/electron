@@ -30,6 +30,12 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
+  // Add a keyboard shortcut to toggle DevTools
+  const { globalShortcut } = require('electron');
+  globalShortcut.register('CommandOrControl+Shift+I', () => {
+    mainWindow.webContents.toggleDevTools();
+  });
+
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   app.on('activate', () => {

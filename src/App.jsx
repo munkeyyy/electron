@@ -11,6 +11,8 @@ import SearchBar from "./Components/Common/SearchBar.jsx";
 import { useNavigate } from "react-router-dom";
 import Folder from "./Components/Folder.jsx";
 
+// Add this somewhere at the top of your app
+// console.log('Available electron APIs:', window.electronAPI);
 export default function App() {
   const [isExpanding, setIsExpanding] = useState(true);
   const [wp, setWp] = useState(null);
